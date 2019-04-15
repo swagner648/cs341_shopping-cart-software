@@ -1,10 +1,124 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<!-- templates/rainbownums/base.html -->
+{% extends '../base.html' %}
 
-</body>
-</html>
+{% block content %}
+
+<table border="1" style="width: 100%; margin-top: 20px;">
+    <thead>
+    <tr>
+        <th>Photo</th>
+        <th>Photo Path</th>
+        <th>Name</th>
+        <th>Unit Price</th>
+        <th>Size</th>
+        <th>Quantity</th>
+        <th>Subtotal</th>
+    </tr>
+    </thead>
+    {% for product in cart %}
+    <tr>
+        <td align="center"><img src={{ product.0.images.all.0.Image.path }} height="200"></td>
+        <td>{{ product.0.images.all.0.Image.url }}</td>
+        <td><a href="/store/product/{{ product.0.ProductID }}">{{ product.0.ProductName }}</a></td>
+        <td>${{ product.2 }}</td>
+        <td>{{ product.1 }}</td>
+        <td>{{ product.3 }}</td>
+        <td>${{ product.4 }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% if total %}
+<div style="float: right;">
+    <p>Total before tax: ${{ total_before_tax }}</p>
+    <p>Tax: ${{ tax }}</p>
+    <p>Total: ${{ total }}</p>
+    <button type="submit">Payment Info</button>
+</div>
+{% else %}
+<div style="float: right;">
+    <p>Total before tax: ${{ total_before_tax }}</p>
+</div>
+
+<br>
+
+{% if coupon %}
+<p>Coupon applied: {{ coupon }}</p>
+{% endif %}
+
+<form action="" method="POST">
+    {% csrf_token %}
+    <div>
+        <p style="display: inline;">First Name</p>
+        <input style="display: inline;" type="text" name="FirstName" id="FirstName">
+        <p style="display: inline;">Last Name</p>
+        <input style="display: inline;" type="text" name="LastName" id="LastName">
+    </div>
+    <div>
+        <p style="display: inline;">Address</p>
+        <input style="display: inline;" type="text" name="Address" id="Address">
+        <p style="display: inline;">City</p>
+        <input style="display: inline;" type="text" name="City" id="City">
+    </div>
+    <div>
+        <p style="display: inline;">State</p>
+        <select style="display: inline;" name="State" id="State">
+            <option value="AL">Alabama</option>
+            <option value="AK">Alaska</option>
+            <option value="AZ">Arizona</option>
+            <option value="AR">Arkansas</option>
+            <option value="CA">California</option>
+            <option value="CO">Colorado</option>
+            <option value="CT">Connecticut</option>
+            <option value="DE">Delaware</option>
+            <option value="DC">District Of Columbia</option>
+            <option value="FL">Florida</option>
+            <option value="GA">Georgia</option>
+            <option value="HI">Hawaii</option>
+            <option value="ID">Idaho</option>
+            <option value="IL">Illinois</option>
+            <option value="IN">Indiana</option>
+            <option value="IA">Iowa</option>
+            <option value="KS">Kansas</option>
+            <option value="KY">Kentucky</option>
+            <option value="LA">Louisiana</option>
+            <option value="ME">Maine</option>
+            <option value="MD">Maryland</option>
+            <option value="MA">Massachusetts</option>
+            <option value="MI">Michigan</option>
+            <option value="MN">Minnesota</option>
+            <option value="MS">Mississippi</option>
+            <option value="MO">Missouri</option>
+            <option value="MT">Montana</option>
+            <option value="NE">Nebraska</option>
+            <option value="NV">Nevada</option>
+            <option value="NH">New Hampshire</option>
+            <option value="NJ">New Jersey</option>
+            <option value="NM">New Mexico</option>
+            <option value="NY">New York</option>
+            <option value="NC">North Carolina</option>
+            <option value="ND">North Dakota</option>
+            <option value="OH">Ohio</option>
+            <option value="OK">Oklahoma</option>
+            <option value="OR">Oregon</option>
+            <option value="PA">Pennsylvania</option>
+            <option value="RI">Rhode Island</option>
+            <option value="SC">South Carolina</option>
+            <option value="SD">South Dakota</option>
+            <option value="TN">Tennessee</option>
+            <option value="TX">Texas</option>
+            <option value="UT">Utah</option>
+            <option value="VT">Vermont</option>
+            <option value="VA">Virginia</option>
+            <option value="WA">Washington</option>
+            <option value="WV">West Virginia</option>
+            <option value="WI">Wisconsin</option>
+            <option value="WY">Wyoming</option>
+        </select>
+        <p style="display: inline;">5-Digit ZIP Code</p>
+        <input style="display: inline;" type="text" name="ZIP" id="ZIP">
+        <button style="display: inline;" type="submit">Continue</button>
+    </div>
+</form>
+{% endif %}
+{% endblock %}

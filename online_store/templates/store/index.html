@@ -1,51 +1,35 @@
-<!DOCTYPE html>
-<html lang="en" style="width: 100%;">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    {% load static %}
-</head>
-<body style="max-width: 1000px; margin: auto;">
-<nav style="padding-top: 10px;">
-    <a style="padding-right: 40px;" href="{% url 'home:index' %}">Home</a>
-    <a href="{% url 'store:index' %}">Store</a>
-    {% if user.is_authenticated %}
-    <a style="float: right" href="{% url 'account:logout' %}">Sign Out</a>
-    {% else %}
-    <a style="float: right" href="{% url 'account:signup' %}">Sign Up</a>
-    <a style="float: right; padding-right: 40px;" href="{% url 'account:login' %}">Sign In</a>
-    {% endif %}
-</nav>
-<hr>
+<!-- templates/rainbownums/base.html -->
+{% extends '../base.html' %}
 
+{% block content %}
+
+<form action="" method="POST" class="form-inline">
+    {% csrf_token %}
+    <input id="search_text" type="text" name="search_text" value="{{ search_text }}" placeholder="Search...">
+    <button id="search_submit" type="submit">Search</button>
+</form>
+
+{% if error %}
+<p>Error when searching.</p>
+{% else %}
 <table border="1" style="width: 100%; margin-top: 20px;">
     <thead>
     <tr>
         <th>Photo</th>
+        <th>Photo Path</th>
         <th>Name</th>
         <th>Price</th>
     </tr>
     </thead>
+    {% for product in products %}
     <tr>
-        <td align="center"><img src="{% static "camp_box_logo.jpg" %}" alt="Camp Box Tee" height="200"></td>
-        <td align="center">Camp Box Tee</td>
-        <td align="center">$19.99</td>
+        <td align="center"><img src={{ product.images.all.0.Image.path }} height="200"></td>
+        <td>{{ product.images.all.0.Image.url }}</td>
+        <td><a href="/store/product/{{ product.ProductID }}">{{ product.ProductName }}</a></td>
+        <td>${{ product.ProductPrice }}</td>
     </tr>
-    <tr>
-        <td align="center"><img src="{% static "dead_rats_sweater.jpg" %}" alt="Dead Rats Sweater" height="200"></td>
-        <td align="center">Dead Rats Sweater</td>
-        <td align="center">$24.99</td>
-    </tr>
-    <tr>
-        <td align="center"><img src="{% static "fields_of_flowers.jpg" %}" alt="Fields of Flowers Sweater" height="200"></td>
-        <td align="center">Fields of Flowers Sweater</td>
-        <td align="center">$29.99</td>
-    </tr>
-    <tr>
-        <td align="center"><img src="{% static "keep_going_front.jpg" %}" alt="Keep Going Tee" height="200"></td>
-        <td align="center">Keep Going Tee/td>
-        <td align="center">$14.99</td>
-    </tr>
+    {% endfor %}
 </table>
-</body>
-</html>
+{% endif %}
+
+{% endblock %}

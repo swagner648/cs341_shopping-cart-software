@@ -1,0 +1,77 @@
+<!-- templates/rainbownums/base.html -->
+{% extends '../base.html' %}
+
+{% block content %}
+
+{% if cart %}
+<table border="1" style="width: 100%; margin-top: 20px;">
+    <thead>
+    <tr>
+        <th>Photo</th>
+        <th>Photo Path</th>
+        <th>Name</th>
+        <th>Unit Price</th>
+        <th>Size</th>
+        <th>Quantity</th>
+        <th>Subtotal</th>
+        <th>Update</th>
+    </tr>
+    </thead>
+    {% for product in cart %}
+    <tr>
+        <form action="" method="POST" class="form-inline">
+            {% csrf_token %}
+            <input type="hidden" name="ProductID" value={{ product.0.ProductID }}>
+            <input type="hidden" name="ProductSize" value={{ product.1 }}>
+            <td align="center"><img src={{ product.0.images.all.0.Image.path }} height="200"></td>
+            <td>{{ product.0.images.all.0.Image.url }}</td>
+            <td><a href="/store/product/{{ product.0.ProductID }}">{{ product.0.ProductName }}</a></td>
+            <td>${{ product.2 }}</td>
+            <td>{{ product.1 }}</td>
+            <td><select name="Quantity" id="Quantity">
+                <option value="0" {% if product.3 == 0 %} selected="selected" {% endif %}>0</option>
+                <option value="1" {% if product.3 == 1 %} selected="selected" {% endif %}>1</option>
+                <option value="2" {% if product.3 == 2 %} selected="selected" {% endif %}>2</option>
+                <option value="3" {% if product.3 == 3 %} selected="selected" {% endif %}>3</option>
+                <option value="4" {% if product.3 == 4 %} selected="selected" {% endif %}>4</option>
+                <option value="5" {% if product.3 == 5 %} selected="selected" {% endif %}>5</option>
+                <option value="6" {% if product.3 == 6 %} selected="selected" {% endif %}>6</option>
+                <option value="7" {% if product.3 == 7 %} selected="selected" {% endif %}>7</option>
+                <option value="8" {% if product.3 == 8 %} selected="selected" {% endif %}>8</option>
+                <option value="9" {% if product.3 == 9 %} selected="selected" {% endif %}>9</option>
+                <option value="10" {% if product.3 == 10 %} selected="selected" {% endif %}>10</option>
+            </select></td>
+            <td>${{ product.4 }}</td>
+            <td>
+                <button id="update" type="submit">Update</button>
+            </td>
+        </form>
+    </tr>
+    {% endfor %}
+</table>
+
+<div style="float: right;">
+    <p>Total before tax: ${{ total }}</p>
+    <form action="{% url 'store:checkout' %}">
+        <button type="Submit">Checkout</button>
+    </form>
+</div>
+
+{% else %}
+Your cart is empty.
+{% endif %}
+
+<br>
+
+<form action="" method="POST" class="form-inline">
+    {% csrf_token %}
+    <input id="CouponCode" type="text" name="CouponCode" value="{{ CouponCode }}"
+           placeholder="Apply coupon...">
+    <button id="search_submit" type="submit">Search</button>
+
+    {% if coupon %}
+    <p>Coupon applied: {{ coupon }}</p>
+    {% endif %}
+</form>
+
+{% endblock %}

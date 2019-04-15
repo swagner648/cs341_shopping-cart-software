@@ -1,0 +1,57 @@
+<!-- templates/rainbownums/base.html -->
+{% extends '../base.html' %}
+
+{% block content %}
+
+<img src={{ product.images.all.0.Image.path }} height="200" alt="">
+
+<p>{{ product.ProductName }}</p>
+
+<p>{{ product.ProductDescription }}</p>
+
+<form action="" method="POST">
+    {% csrf_token %}
+
+    <input type = "hidden" name="ProductID" value={{ product.ProductID }} />
+
+    <p>Size:</p>
+    <select name="ProductSize" id="size">
+        <option value="W-XXS">Women's XX-Small</option>
+        <option value="W-XS">Women's X-Small</option>
+        <option value="W-S">Women's Small</option>
+        <option value="W-M">Women's Medium</option>
+        <option value="W-L">Women's Large</option>
+        <option value="W-XL">Women's X-Large</option>
+        <option value="W-XXL">Women's XX-Large</option>
+        <option value="M-XXS">Men's XX-Small</option>
+        <option value="M-XS">Men's X-Small</option>
+        <option value="M-S">Men's Small</option>
+        <option value="M-M">Men's Medium</option>
+        <option value="M-L">Men's Large</option>
+        <option value="M-XL">Men's X-Large</option>
+        <option value="M-XXL">Men's XX-Large</option>
+    </select>
+
+    <p>Quantity</p>
+    <select name="Quantity" id="quantity">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+    </select>
+
+    <button id="search_submit" type="submit">Add to Cart</button>
+
+    {% if added %}
+    <p>Item has been added to cart!</p>
+    {% endif %}
+</form>
+
+
+{% endblock %}
