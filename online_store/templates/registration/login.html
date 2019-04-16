@@ -1,26 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Login</title>
-    </head>
-    <body>
-        <div>
+<!-- templates/rainbownums/base.html -->
+{% extends '../base.html' %}
 
-            <h1>Login Here</h1>
+{% block content %}
 
-            {% if form.errors %}
-            <p style="font-size: 14px; color: #F7B47F;">Incorrect username or password.</p>
-            {% endif %}
+<div>
 
-            <form method="POST">
-                {% csrf_token %}
-                <p>Username</p>
-                <input type="text" name="username" placeholder="Enter Username" required>
-                <p>Password</p>
-                <input type="password" name="password" placeholder="Enter Password" required>
-                <input type="submit" name="" value="Login">
-            </form>
-        </div>
-    </body>
-</html>
+    <h1>Login Here</h1>
+
+    {% if form.errors %}
+    <p style="font-size: 14px; color: #F7B47F;">Incorrect username or password.</p>
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <p>Username</p>
+        <input type="text" name="username" placeholder="Enter Username" required>
+        <p>Password</p>
+        <input type="password" name="password" placeholder="Enter Password" required>
+        <input type="submit" name="" value="Login">
+    </form>
+</div>
+
+{% endblock %}

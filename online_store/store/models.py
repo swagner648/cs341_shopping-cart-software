@@ -40,12 +40,15 @@ class ProductImage(models.Model):
 class Transaction(models.Model):
     TransactionID = models.AutoField(primary_key=True, unique=True)
     TransactionDateTime = models.DateTimeField(auto_now_add=True)
-    CustomerID = models.PositiveIntegerField(default=0)
+    TransactionProducts = models.TextField()
     CustomerEmail = models.TextField()
     CustomerAddress = models.TextField()
+    CustomerCity = models.CharField(max_length=50)
+    CustomerState = models.CharField(max_length=2)
+    CustomerZIP = models.IntegerField()
 
     def __str__(self):
-        return self.TransactionDateTime + " " + self.CustomerID
+        return str(self.TransactionDateTime) + " " + str(self.CustomerEmail)
 
 
 class Coupon(models.Model):

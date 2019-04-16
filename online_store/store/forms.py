@@ -24,7 +24,17 @@ class Apply_Coupon(forms.Form):
 class Checkout(forms.Form):
     FirstName = forms.CharField(max_length=50)
     LastName = forms.CharField(max_length=50)
+    Email = forms.EmailField(max_length=254)
     Address = forms.CharField(max_length=50)
     City = forms.CharField(max_length=50)
     State = forms.CharField(max_length=2)
     ZIP = forms.IntegerField()
+
+
+class Purchase(forms.Form):
+    # TransactionProducts = forms.CharField()
+    CustomerEmail = forms.CharField()
+    CustomerAddress = forms.CharField()
+    CustomerCity = forms.CharField(max_length=50)
+    CustomerState = forms.CharField(max_length=2)
+    CustomerZIP = forms.IntegerField()

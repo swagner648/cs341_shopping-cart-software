@@ -1,11 +1,13 @@
 from django.shortcuts import render
+from django.contrib.auth.models import User
 from .models import Product, Transaction, Coupon
-from .forms import Search, Add_To_Cart, Update_Cart, Apply_Coupon, Checkout
+from .forms import Search, Add_To_Cart, Update_Cart, Apply_Coupon, Checkout, Purchase
 from .basics import unique_set
 import itertools
 from django.core.exceptions import ObjectDoesNotExist
 from decimal import *
 import taxjar
+from django.shortcuts import redirect
 
 
 # Create your views here.
@@ -116,6 +118,7 @@ def product(request, pk):
 
 
 def checkout(request):
+    user = request.user
     cart = request.session.get('cart', {})
     coupon = request.session.get('coupon', None)
     data = []
@@ -126,7 +129,6 @@ def checkout(request):
             data.append([product, product_size, product.ProductPrice, quantity, product.ProductPrice * quantity])
     data.sort(key=lambda p: (p[0].ProductID, p[1]))
     total_before_tax = sum([p[4] for p in data])
-    print(coupon)
     if coupon is not None:
         try:
             coupon = Coupon.objects.get(CouponCode=coupon)
@@ -150,17 +152,36 @@ def checkout(request):
     if request.method == 'POST':
         form = Checkout(request.POST)
         if form.is_valid():
-            FirstName = form.cleaned_data.get('FirstName')
-            LastName = form.cleaned_data.get('LastName')
             Address = form.cleaned_data.get('Address')
             City = form.cleaned_data.get('City')
             State = form.cleaned_data.get('State')
             ZIP = form.cleaned_data.get('ZIP')
+            address = [Address, City, State, ZIP]
 
             client = taxjar.Client(api_key='75c83ef0d87597791151ab2057ff6b41')
             rates = client.rates_for_location(str(ZIP), {'city': City, 'country': 'US'})
             rate = rates['combined_rate']
             tax = round(Decimal(total_before_tax) * Decimal(rate), 2)
             total = total_before_tax + tax
-            return render(request, 'store/checkout.html', {'cart': data, 'total_before_tax': total_before_tax, 'tax': tax, 'total': total, 'coupon': coupon})
-    return render(request, 'store/checkout.html', {'cart': data, 'total_before_tax': total_before_tax, 'coupon': coupon})
+
+            return render(request, 'store/checkout.html',
+                          {'cart': data, 'total_before_tax': total_before_tax, 'tax': tax, 'total': total,
+                           'coupon': coupon, 'address': address})
+        form = Purchase(request.POST)
+        if form.is_valid():
+            transaction = Transaction()
+            transaction.CustomerEmail = form.cleaned_data.get('CustomerEmail')
+            transaction.CustomerAddress = form.cleaned_data.get('CustomerAddress')
+            transaction.CustomerCity = form.cleaned_data.get('CustomerCity')
+            transaction.CustomerState = form.cleaned_data.get('CustomerState')
+            transaction.CustomerZIP = form.cleaned_data.get('CustomerZIP')
+            transaction.save()
+            return redirect('store:purchase', pk=transaction.TransactionID)
+    return render(request, 'store/checkout.html',
+                  {'cart': data, 'total_before_tax': total_before_tax, 'coupon': coupon, 'user': user})
+
+
+def purchase(request, pk):
+    transaction = Transaction.objects.get(pk=pk)
+    customer = User.objects.get(email=transaction.CustomerEmail)
+    return render(request, 'store/purchase.html', {'transaction': transaction})

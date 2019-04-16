@@ -8,7 +8,6 @@
     <thead>
     <tr>
         <th>Photo</th>
-        <th>Photo Path</th>
         <th>Name</th>
         <th>Unit Price</th>
         <th>Size</th>
@@ -23,8 +22,7 @@
             {% csrf_token %}
             <input type="hidden" name="ProductID" value={{ product.0.ProductID }}>
             <input type="hidden" name="ProductSize" value={{ product.1 }}>
-            <td align="center"><img src={{ product.0.images.all.0.Image.path }} height="200"></td>
-            <td>{{ product.0.images.all.0.Image.url }}</td>
+            <td align="center"><img src={{ product.0.images.all.0.Image.url }} height="200"></td>
             <td><a href="/store/product/{{ product.0.ProductID }}">{{ product.0.ProductName }}</a></td>
             <td>${{ product.2 }}</td>
             <td>{{ product.1 }}</td>

@@ -16,15 +16,13 @@
     <thead>
     <tr>
         <th>Photo</th>
-        <th>Photo Path</th>
         <th>Name</th>
         <th>Price</th>
     </tr>
     </thead>
     {% for product in products %}
     <tr>
-        <td align="center"><img src={{ product.images.all.0.Image.path }} height="200"></td>
-        <td>{{ product.images.all.0.Image.url }}</td>
+        <td align="center"><img src={{ product.images.all.0.Image.url }} height="200"></td>
         <td><a href="/store/product/{{ product.ProductID }}">{{ product.ProductName }}</a></td>
         <td>${{ product.ProductPrice }}</td>
     </tr>
