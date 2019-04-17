@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class StoreConfig(AppConfig):
-    name = 'static'
+    name = 'static-assets'
